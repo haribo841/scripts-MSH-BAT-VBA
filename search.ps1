@@ -1,7 +1,7 @@
 $PSDefaultParameterValues['Out-File:Encoding'] = 'utf8';
 function selectFromDB($loginAD)
 {
-    $OU = "DC=enea,DC=pl";
+    $OU = "DC=DOMAIN_NAME,DC=en";
     $resultAD = Get-ADUser -Properties * -Filter {SAMAccountName -eq $loginAD} -SearchBase $OU | 
         select cn,sAMAccountName, mail, enabled, company, personalTitle, department,manager,extensionAttribute6, mobile, MobilePhone, 
             msExchWhenMailboxCreated, City, createTimeStamp, LastLogonDate, LastBadPasswordAttempt, Office, OfficePhone, telephoneNumber, 
@@ -30,9 +30,9 @@ function selectFromDB($loginAD)
     $lastSet = $resultAD.PasswordLastSet;
 
     if($Enabled -eq $True) {
-            $Enabled = "Tak";
+            $Enabled = "Yes";
         } elseif($Enabled -eq $False) {
-            $Enabled = "Nie";
+            $Enabled = "No";
         }
 
     $stars = '';
@@ -46,3 +46,54 @@ function selectFromDB($loginAD)
 
         $managerSplit = $manager.Split(',');
         $managerReplace = $managerSplit[0];
+1
+        $manager = $managerReplace -replace "CN=","";
+
+    }
+
+    $lengthExtensionAttribute6 = $extensionAttribute6.Length;
+    if($lengthExtensionAttribute6 -eq 0) {
+        $extensionAttribute6 = '';
+    } else {
+    $countStars = 11 - $lengthExtensionAttribute6
+    for($i = 0; $i -lt $countStars; $i++)
+    {
+        $stars = $stars+'*';
+    }
+
+    $extensionAttribute6 = $stars+$extensionAttribute6;
+    }
+
+    write-output * | Select-Object -Property @{
+        label='Name displayed'
+        expression={$cn}
+      },@{
+        label='Login'
+        expression={$sAMAccountName}
+      },@{
+        label='E-mail adress'
+        expression={$mail}
+      },@{
+        label='Account active'
+        expression={$enabled}
+      },@{
+        label='Company'
+        expression={$company}
+      },@{
+        label='Unit'
+        expression={$department}
+      },@{
+        label='Position'
+        expression={$personalTitle}
+      },@{
+        label='Supervisor'
+        expression={$manager}
+      },@{
+        label='PESEL'
+        expression={$extensionAttribute6}
+      },@{
+        label='City'
+        expression={$city}
+      },@{
+        label = 'Location'
+        expression = {$office}
