@@ -46,7 +46,6 @@ function selectFromDB($loginAD)
 
         $managerSplit = $manager.Split(',');
         $managerReplace = $managerSplit[0];
-1
         $manager = $managerReplace -replace "CN=","";
 
     }
@@ -97,3 +96,44 @@ function selectFromDB($loginAD)
       },@{
         label = 'Location'
         expression = {$office}
+ },@{
+        label = 'Nr tel. kom.'
+        expression = {$mobile}
+      },@{
+        label = 'Nr tel. kom. 2'
+        expression = {$mobile2} 
+      },@{
+        label = 'Nr tel. biur.'
+        expression = {$phone}
+      },@{
+        label = 'Nr tel. biur. 2'
+        expression = {$phone2}
+      },@{
+        label = 'Data utworzenia konta'
+        expression = {$tsADA}
+      },@{
+        label = 'Data utworzenia skrzynki'
+        expression = {$tsPoczta}
+      },@{
+        label = 'Ostatnie logowanie'
+        expression = {$lastLogon}
+      },@{
+        label = 'Ostatnie niepomyślne uwierzytelnianie'
+        expression = {$lastBadPass}
+      },@{
+        label = 'Czy hasło wygasło?'
+        expression = {$expired}
+      },@{
+        label = 'Ostatnia zmiana hasła'
+        expression = {$lastSet}
+      } | Format-List 
+
+      #Write-Output $resultAD
+}
+
+DO {
+    cls
+    $loginAD = Read-Host -Prompt 'Podaj login użytkownika';
+    selectFromDB -loginAD $loginAD;
+    $key = Read-Host -Prompt 'Czy chcesz wyszukać ponownie użytkownika [T/N]'
+} While ($key -eq 'T')
