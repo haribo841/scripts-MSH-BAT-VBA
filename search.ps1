@@ -18,7 +18,7 @@ function selectFromDB($loginAD)
     $extensionAttribute6 = $resultAD.extensionAttribute6;
     $mobile = $resultAD.mobile;
     $mobile2 = $resultAD.MobilePhone;
-    $tsPoczta = $resultAD.msExchWhenMailboxCreated;
+    $tsMailbox = $resultAD.msExchWhenMailboxCreated;
     $city = $resultAD.City;
     $tsADA = $resultAD.createTimeStamp;
     $lastLogon = $resultAD.LastLogonDate;
@@ -96,35 +96,35 @@ function selectFromDB($loginAD)
       },@{
         label = 'Location'
         expression = {$office}
- },@{
-        label = 'Nr tel. kom.'
+      },@{
+        label = 'Mobile no.'
         expression = {$mobile}
       },@{
-        label = 'Nr tel. kom. 2'
+        label = 'Mobile no. 2'
         expression = {$mobile2} 
       },@{
-        label = 'Nr tel. biur.'
+        label = 'Offices no.'
         expression = {$phone}
       },@{
-        label = 'Nr tel. biur. 2'
+        label = 'Offices no. 2'
         expression = {$phone2}
       },@{
-        label = 'Data utworzenia konta'
+        label = 'Account creation date'
         expression = {$tsADA}
       },@{
-        label = 'Data utworzenia skrzynki'
-        expression = {$tsPoczta}
+        label = 'Mailbox creation date'
+        expression = {$tsMailbox}
       },@{
-        label = 'Ostatnie logowanie'
+        label = 'Last Logon'
         expression = {$lastLogon}
       },@{
-        label = 'Ostatnie niepomyślne uwierzytelnianie'
+        label = 'Last failed authentication'
         expression = {$lastBadPass}
       },@{
-        label = 'Czy hasło wygasło?'
+        label = 'Has password expired?'
         expression = {$expired}
       },@{
-        label = 'Ostatnia zmiana hasła'
+        label = 'Last password change'
         expression = {$lastSet}
       } | Format-List 
 
@@ -133,7 +133,7 @@ function selectFromDB($loginAD)
 
 DO {
     cls
-    $loginAD = Read-Host -Prompt 'Podaj login użytkownika';
+    $loginAD = Read-Host -Prompt 'Enter the user login';
     selectFromDB -loginAD $loginAD;
-    $key = Read-Host -Prompt 'Czy chcesz wyszukać ponownie użytkownika [T/N]'
-} While ($key -eq 'T')
+    $key = Read-Host -Prompt 'Do you want to search for the user again [Y/N]'
+} While ($key -eq 'Y')

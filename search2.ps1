@@ -43,3 +43,36 @@ function chceckLastSearch()
         }
     }
 }
+function selectFromDB()
+{
+    param ($loginAD)
+    $loginAD = $loginAD.ToString()
+    $resultAD = Get-ADUser -Properties * -Filter {SAMAccountName -eq $loginAD} | 
+        select cn,sAMAccountName, mail, enabled, company, personalTitle, department,manager,extensionAttribute6, mobile, MobilePhone, 
+            msExchWhenMailboxCreated, City, createTimeStamp, LastLogonDate, LastBadPasswordAttempt, Office, OfficePhone, telephoneNumber, 
+            PasswordExpired, PasswordLastSet, msExchMailboxAuditEnable, msExchMailboxAuditLastAdminAccess, msExchMailboxAuditLastDelegateAccess
+
+    $cn = $resultAD.cn;
+    $sAMAccountName = $resultAD.sAMAccountName;
+    $mail = $resultAD.mail;
+    $enabled = $resultAD.Enabled;
+    $company = $resultAD.company;
+    $personalTitle = $resultAD.personalTitle;
+    $department = $resultAD.department;
+    $manager = $resultAD.manager;
+    $extensionAttribute6 = $resultAD.extensionAttribute6;
+    $mobile = $resultAD.mobile;
+    $mobile2 = $resultAD.MobilePhone;
+    $tsPoczta = $resultAD.msExchWhenMailboxCreated;
+    $city = $resultAD.City;
+    $tsADA = $resultAD.createTimeStamp;
+    $lastLogon = $resultAD.LastLogonDate;
+    $lastBadPass = $resultAD.LastBadPasswordAttempt;
+    $office = $resultAD.Office;
+    $phone = $resultAD.OfficePhone;
+    $phone2 = $resultAD.telephoneNumber;
+    $expired = $resultAD.PasswordExpired;
+    $lastSet = $resultAD.PasswordLastSet;
+    $msexchaudit = $resultAD.msExchMailboxAuditEnable
+    $msexchauditAccAdmi = $resultAD.msExchMailboxAuditLastAdminAccess
+    $msexchauditAccDele = $resultAD.msExchMailboxAuditLastDelegateAccess
