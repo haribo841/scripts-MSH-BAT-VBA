@@ -76,3 +76,48 @@ function selectFromDB()
     $msexchaudit = $resultAD.msExchMailboxAuditEnable
     $msexchauditAccAdmi = $resultAD.msExchMailboxAuditLastAdminAccess
     $msexchauditAccDele = $resultAD.msExchMailboxAuditLastDelegateAccess
+
+     if($Enabled -eq $True) {
+        $Enabled = "Yes";
+        $Alert1 = "";
+    } elseif($Enabled -eq $False) {
+        $Enabled = "No";
+        $Alert1 = "                                                [!]";
+    }
+
+    if($expired -eq $True) {
+        $expired = "Yes";
+        $Alert2 = "                                                [!]";
+    } elseif($expired -eq $False) {
+        $expired = "No";
+        $Alert2 = "";
+    }
+
+    if($msexchaudit -eq $True) {
+        $msexchaudit = "Yes";
+    } elseif($msexchaudit -eq $False) {
+        $msexchaudit = "No";
+    }
+
+    $stars = '';
+    $managerLength = $manager.Length;
+    
+    if($managerLength -eq 0) {
+        $manager = "";
+    } else {
+        $managerSplit = $manager.Split(',');
+        $managerReplace = $managerSplit[0];
+        $manager = $managerReplace -replace "CN=","";
+    }
+
+    $lengthExtensionAttribute6 = $extensionAttribute6.Length;
+
+    if($lengthExtensionAttribute6 -eq 0) {
+        $extensionAttribute6 = '';
+    } else {
+        $countStars = 11 - $lengthExtensionAttribute6
+        for($i = 0; $i -lt $countStars; $i++) {
+            $stars = $stars+'*';
+        }
+        $extensionAttribute6 = $stars+$extensionAttribute6;
+    }
