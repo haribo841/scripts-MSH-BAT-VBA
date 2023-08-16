@@ -121,3 +121,78 @@ function selectFromDB()
         }
         $extensionAttribute6 = $stars+$extensionAttribute6;
     }
+
+    write-output * | Select-Object -Property @{ #THERE IS SOMETHING BREAKING THE FORMATTING, MAYBE WRITE_OUTS
+        label='Name displayed'
+        expression={$cn}
+      },@{
+        label='Login'
+        expression={$sAMAccountName}
+      },@{
+        label='E-mail adress'
+        expression={$mail}
+      },@{
+        label='Company'
+        expression={$company}
+      },@{
+        label='Department'
+        expression={$department}
+      },@{
+        label='Position'
+        expression={$personalTitle}
+      },@{
+        label='Supervisor'
+        expression={$manager}
+      },@{
+        label='PESEL'
+        expression={$extensionAttribute6}
+      },@{
+        label='City'
+        expression={$city}
+      },@{
+        label = 'Location'
+        expression = {$office}
+      },@{
+        label = 'Mobile no.'
+        expression = {$mobile}
+      },@{
+        label = 'Mobile no. 2'
+        expression = {$mobile2} 
+      },@{
+        label = 'Offices no.'
+        expression = {$phone}
+      },@{
+        label = 'Offices no. 2'
+        expression = {$phone2}
+      },@{
+        label='Account active?'
+        expression={$enabled+$Alert1}
+      },@{
+        label = 'Has password expired?'
+        expression = {$expired+$Alert2}
+      },@{        
+        label = 'Account creation date'
+        expression = {$tsADA}
+      },@{
+        label = 'Mailbox creation date'
+        expression = {$tsPoczta}
+	  },@{
+        label = 'Last Logon'
+        expression = {$lastLogon}
+      },@{
+        label = 'Last failed authentication'
+        expression = {$lastBadPass}
+      },@{
+        label = 'Last password change'
+        expression = {$lastSet}
+      },@{
+        label = 'MS Exch Audit?'
+        expression = {$msexchaudit}
+      },@{
+        label = 'Administrators last access to mail'
+        expression = {$msexchauditAccAdmi}
+      },@{
+        label = 'Proxys last access to mail'
+        expression = {$msexchauditAccDele}
+      }
+}

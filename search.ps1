@@ -79,7 +79,7 @@ function selectFromDB($loginAD)
         label='Company'
         expression={$company}
       },@{
-        label='Unit'
+        label='Department'
         expression={$department}
       },@{
         label='Position'
