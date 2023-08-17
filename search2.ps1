@@ -196,3 +196,63 @@ function selectFromDB()
         expression = {$msexchauditAccDele}
       }
 }
+
+function isUserExist
+{
+    param ($loginAD)
+    try
+    {
+        Get-ADUser -Identity $loginAD -ErrorAction Stop | Out-Null
+        return $true;
+    }
+    catch 
+    {
+        return $false;
+    }
+}
+
+function checkUserExist #total spghetti 
+{
+    param ($loginAD)
+
+    if(isUserExist $loginAD)
+    {
+        return $loginAD
+    }
+    else
+    {
+        if($loginAD -like '*?.?*')
+        {   
+            if ($loginAD.Length -gt 2)
+            {
+                $loginTemp = $loginAD.Split(".")
+                $newLoginToChck = $loginTemp[1] + '.' + $loginTemp[0]
+                $didyou = Read-Host -Prompt "`nCannot find user. Did you mean '$($newLoginToChck)'? [Y/n] (default=Y)"; 
+                $didyou = ('y',$didyou)[[bool]$didyou]
+                if($didyou -eq 'y')
+                {
+                    #check the reversed order
+                    if(isUserExist $newLoginToChck)
+                    {
+                        return $newLoginToChck;
+                    }
+                    else
+                    {
+                        $loginTemp=$newLoginToChck.Split(".")
+                    }
+                }
+                else #do not check the reversed order
+                {
+                    $loginTemp=$loginAD.Split(".")
+                }
+            }
+            else
+            {
+                $loginTemp=$loginAD.Split(".")
+            }
+        }
+        else
+        {
+            $loginTemp=$loginAD
+        }
+
