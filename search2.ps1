@@ -290,7 +290,7 @@ function checkUserExist #total spghetti
                 $didyou = ('y',$didyou)[[bool]$didyou]
                 if($didyou -eq 'y')
                 {
-                    #sprawdzaj zamieniona kolejnosc
+                    # Check the reversed order
                     if(isUserExist $newLoginToChck)
                     {
                         return $newLoginToChck;
@@ -300,7 +300,7 @@ function checkUserExist #total spghetti
                         $loginTemp=$newLoginToChck.Split(".")
                     }
                 }
-                else #nie sprawdzaj zamienionej kolejnosci
+                else # Do not check the reversed order
                 {
                     $loginTemp=$loginAD.Split(".")
                 }
@@ -314,3 +314,42 @@ function checkUserExist #total spghetti
         {
             $loginTemp=$loginAD
         }
+        5b
+##### D E B U G #####
+        if($debug){ Write-Host "" }
+        if($debug){ Write-Host "[DEBUG] loginTemp::$loginTemp" }
+        if($debug){ Write-Host "[DEBUG] loginTemp.GetType::$($loginTemp.GetType())" }
+
+        # Searching for similar
+        while($true)
+        {  
+            # Query with a space
+            if($loginAD -like '*? ?*')
+            {   
+                if ($loginAD.Length -gt 2)
+                {
+                    $loginTemp = $loginAD.Split(" ")
+                    $printLoginTemp=$loginAD
+                }
+            }
+
+            if( -not $debug){ cls }
+            if($loginAD -like '*? ?*')
+            {   
+                if ($loginAD.Length -gt 2)
+                {
+                    $loginTemp = $loginAD.Split(" ")
+                    $printLoginTemp=$loginAD
+                }
+            }
+            elseif($loginTemp.GetType() -eq [string[]])
+            {
+                $printLoginTemp = "$($loginTemp[0]).$($loginTemp[1])"
+            }
+            else
+            {
+                $printLoginTemp = "$loginTemp"
+            }
+            
+            Write-Host "`nUser '$printLoginTemp' cannot be found, below users with similar names:`n`n----------------------------------------------------------------------------------------------------"
+            Write-Host "`nThe database processes the query..."
