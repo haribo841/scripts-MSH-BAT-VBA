@@ -314,7 +314,7 @@ function checkUserExist #total spghetti
         {
             $loginTemp=$loginAD
         }
-        5b
+
 ##### D E B U G #####
         if($debug){ Write-Host "" }
         if($debug){ Write-Host "[DEBUG] loginTemp::$loginTemp" }
@@ -353,3 +353,43 @@ function checkUserExist #total spghetti
             
             Write-Host "`nUser '$printLoginTemp' cannot be found, below users with similar names:`n`n----------------------------------------------------------------------------------------------------"
             Write-Host "`nThe database processes the query..."
+
+              #looking for similar ones
+            try
+            {    
+                #e.g. john doe
+                if ($loginTemp.GetType() -eq [string[]])
+                {            
+                    $searchResult = Get-ADUser -Properties SamAccountName -Filter "SAMAccountName -like '*$($loginTemp[1])*' -or SAMAccountName -like '*$($loginTemp[0])*'" | sort SamAccountName
+                }
+                elseif ($loginTemp.GetType() -eq [string])
+                {
+                    $searchResult = Get-ADUser -Properties SamAccountName -Filter "SAMAccountName -like '*$($loginTemp)*'" | sort SamAccountName
+                }
+
+            }
+            catch
+            {
+
+                $searchResult=$null
+
+            }
+
+            #listing similar
+            if( -not $debug){ cls }
+            Write-Host "`nUser '$printLoginTemp' cannot be found, below users with similar names:`n`n----------------------------------------------------------------------------------------------------"
+            try
+            {
+       #         if (!($searchResult.SAMAccountName.GetType() -eq [System.Object[]]))
+       #         {
+       #             Write-Host "`n$($searchResult.SamAccountName)"
+       #         }
+       #         else
+       #         {
+                     #$size = $searchResult.Length
+                
+                # A faster printing version 
+                $toDisplay=$searchResult.SAMAccountName | Format-Wide -force -prop {$_} -Column 4 | Out-String # | % {Write-Host $_};
+                $toDisplay=$toDisplay.substring(2)
+                $toDisplay=$toDisplay.substring(0,$toDisplay.Length-3)
+                Write-Host $toDisplay
