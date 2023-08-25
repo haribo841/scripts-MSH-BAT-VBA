@@ -393,3 +393,48 @@ function checkUserExist #total spghetti
                 $toDisplay=$toDisplay.substring(2)
                 $toDisplay=$toDisplay.substring(0,$toDisplay.Length-3)
                 Write-Host $toDisplay
+
+       #             #for ($i = 0; $i -lt $size; $i++)
+       #             #{ 
+       #             #    Write-Host -NoNewline "$($searchResult[$i].SamAccountName)"
+       #             #    for (($j = $searchResult[$i].SamAccountName.Length); $j -lt 25; $j++)
+       #             #    {
+       #             #        Write-Host -NoNewline " "
+       #             #    }
+       #             #    if (($size -eq 1) -or (($i+1)%4 -eq 0) -or (($i -eq $size-1) -and ( -not ($i+1%4 -eq 0))))
+       #             #    {
+       #             #        Write-Host ""
+       #             #    }
+       #             #}
+       #         }
+            }
+            catch
+            {
+                Write-Host "`nNothing was found!`n"
+            }
+            Write-Host "---------------------------------------------------------------------------------------------------`n"
+            $newLoginToChck = Read-Host -Prompt "Enter a valid username, name, surname or q to exit search"
+            if((isUserExist $newLoginToChck) -or ($newLoginToChck -eq 'q'))
+            {
+                return $newLoginToChck;
+            }
+            else
+            {
+                if($newLoginToChck -like '*?.?*')
+                {
+                    $loginTemp = $newLoginToChck.Split(".")
+                }
+                else
+                {
+                        $loginTemp = $newLoginToChck
+                }
+            }
+        }
+    }
+}
+
+$lastSearchArr = chceckLastSearch("init")
+$loginAD = $lastSearchArr[0]
+if( -not $debug){ Write-Host "loginAD::$loginAD" }
+$lastSearch = $lastSearchArr[1]
+if( -not $debug){ Write-Host "lastSearch::$lastSearch" }
