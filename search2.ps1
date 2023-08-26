@@ -1,4 +1,4 @@
-$SaveSearchHistory=$true #$true or $false
+﻿$SaveSearchHistory=$true #$true or $false
 $file="SearchHistory.txt" #file name
 $debug=$false
 
@@ -438,3 +438,32 @@ $loginAD = $lastSearchArr[0]
 if( -not $debug){ Write-Host "loginAD::$loginAD" }
 $lastSearch = $lastSearchArr[1]
 if( -not $debug){ Write-Host "lastSearch::$lastSearch" }
+
+:main while ($true)
+{
+    if( -not $debug){ cls }
+    Write-Host "search script"
+    switch ( $option )
+    {
+        'a'
+        { 
+            Get-ADUser -Identity $loginAD -Properties * | Format-List;
+        }
+        'b'
+        { 
+            selectFromDB -loginAD $loginAD | Format-List;
+        }
+        'e'
+        { 
+            Get-Aduser $loginAD -property 'msDS-AuthenticatedAtDC' | Format-List;
+        }
+    }
+    Write-Host "Previous search result: $lastSearch"
+    Write-Host "────────────────────────────────────────────────────────────────────────────────────────────────────";
+    Write-Host '                                                                                                    ';
+    Write-Host ' [?] Enter a valid username,       b - basic properties       a - all properties                    ';
+    Write-Host '     name, surname or option       e - exttended properties   q - quit                              ';
+    Write-Host ""
+    Write-Host "────────────────────────────────────────────────────────────────────────────────────────────────────";
+    $choose = Read-Host -Prompt "`b"; #`b
+    $choose = ($option,$choose)[[bool]$choose]
