@@ -231,65 +231,6 @@ function checkUserExist #total spghetti
                 $didyou = ('y',$didyou)[[bool]$didyou]
                 if($didyou -eq 'y')
                 {
-                    #check the reversed order
-                    if(isUserExist $newLoginToChck)
-                    {
-                        return $newLoginToChck;
-                    }
-                    else
-                    {
-                        $loginTemp=$newLoginToChck.Split(".")
-                    }
-                }
-                else #do not check the reversed order
-                {
-                    $loginTemp=$loginAD.Split(".")
-                }
-            }
-            else
-            {
-                $loginTemp=$loginAD.Split(".")
-            }
-        }
-        else
-        {
-            $loginTemp=$loginAD
-        }
-
-        function isUserExist
-{
-    param ($loginAD)
-    try
-    {
-        Get-ADUser -Identity $loginAD -ErrorAction Stop | Out-Null
-        return $true;
-    }
-    catch 
-    {
-        return $false;
-    }
-}
-
-function checkUserExist #total spghetti 
-{
-    param ($loginAD)
-
-    if(isUserExist $loginAD)
-    {
-        return $loginAD
-    }
-    else
-    {
-        if($loginAD -like '*?.?*')
-        {   
-            if ($loginAD.Length -gt 2)
-            {
-                $loginTemp = $loginAD.Split(".")
-                $newLoginToChck = $loginTemp[1] + '.' + $loginTemp[0]
-                $didyou = Read-Host -Prompt "`nCannot find user. Did you mean '$($newLoginToChck)'? [Y/n] (default=Y)"; 
-                $didyou = ('y',$didyou)[[bool]$didyou]
-                if($didyou -eq 'y')
-                {
                     # Check the reversed order
                     if(isUserExist $newLoginToChck)
                     {
@@ -467,3 +408,43 @@ if( -not $debug){ Write-Host "lastSearch::$lastSearch" }
     Write-Host "────────────────────────────────────────────────────────────────────────────────────────────────────";
     $choose = Read-Host -Prompt "`b"; #`b
     $choose = ($option,$choose)[[bool]$choose]
+
+    switch ( $choose )
+    {
+        'b'
+        {
+            $option = 'b';
+        }
+        'a'
+        {
+            $option = 'a';
+        }
+        'e'
+        {
+            $option = 'e';
+        }
+        'q'
+        {
+            Break main
+        }
+        Default
+        {   
+            $loginTemp = checkUserExist $choose
+            if(!($loginTemp -eq 'q'))
+            {
+                $loginAD=$loginTemp
+            }
+            if($SaveSearchHistory -and ( -not ($loginAD -eq 'q')))
+            {
+                Write-Host "'$loginAD'"
+                $date = Get-Date -Format "dd/MM/yyyy HH:mm"
+                echo "$date $loginAD" >> $file
+                $lastSearch = chceckLastSearch("last")
+                if((Get-Content $file).Length -gt 500)
+                {
+                    (Get-Content $file | Select-Object -Skip 1) | Set-Content $file
+                }
+            }
+        }
+    }
+}
