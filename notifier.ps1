@@ -25,3 +25,23 @@ $voiceNotification=
         }
     }
 }
+function checkShift()
+{
+    $date = Get-Date
+    if(($date.Hour -ge "5") -and ($date.Hour -le "12"))
+    {
+        return "morning shift"
+    }
+    elseif(($date.Hour -ge "13") -and ($date.Hour -le "20"))
+    {
+        return "afternoon shift"
+    }
+    elseif((($date.Hour -ge "21") -and ($date.Hour -le "23")) -or (($date.Hour -ge "0") -and ($date.Hour -le "4")))
+    {
+        return "night shift"
+    }
+    else
+    {
+        return "outside working hours"
+    }
+}
