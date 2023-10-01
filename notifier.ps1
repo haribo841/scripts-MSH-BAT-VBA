@@ -45,3 +45,50 @@ function checkShift()
         return "outside working hours"
     }
 }
+function checkDay()
+{
+    $date = Get-Date
+    if($date.Day -ge "09")
+    {
+        $date = $date.AddMonths(1)
+    }
+
+    $MM = $date.Month
+    $yy = $date.Year
+
+    $day = [math]::Ceiling((([DateTime]"$mm-09-$yy")-(Get-Date)).TotalDays)
+    return $day
+}
+
+function checkTime()
+{
+    param ($shift)
+
+    $time = Get-Date -Format HH:mm:ss
+    switch ( $shift )
+    {
+        "morning shift"
+        {
+            $alertTime = [datetime]"13:45:00"
+        }
+        "afternoon shift"
+        {
+            $alertTime = [datetime]"21:45:00"
+        }
+        "night shift"
+        {
+            $alertTime = [datetime]"5:45:00"
+        }
+        "outside working hours"
+        {
+            return 0
+        }
+    }
+    $output = (New-TimeSpan -Start $time -End $alertTime).TotalSeconds
+    if( $output -lt 0 )
+    {
+        $output = 86400 + $output
+    }
+    Write-Host "$($output)s"
+    return $output
+}
