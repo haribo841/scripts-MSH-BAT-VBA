@@ -92,3 +92,29 @@ function checkTime()
     Write-Host "$($output)s"
     return $output
 }
+function alert()
+{
+    param ($type)
+    switch ( $type )
+    {
+        0
+        {
+            $ButtonType = [System.Windows.MessageBoxButton]::YesNo
+            $MessageIcon = [System.Windows.MessageBoxImage]::Information
+            $MessageBody = "Do you want to open website?"
+            $MessageTitle = "Open website?"
+            $result = [System.Windows.MessageBox]::Show($MessageBody,$MessageTitle,$ButtonType,$MessageIcon)
+            switch ( $result )
+            {
+                "Yes"
+                {
+                    [system.Diagnostics.Process]::Start("chrome","https://example.si/te")
+                }
+                "No"
+                {
+                }
+                Default
+                {
+                }
+            }
+        }
