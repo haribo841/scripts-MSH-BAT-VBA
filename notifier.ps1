@@ -97,7 +97,6 @@ function alert()
     param ($type)
     switch ( $type )
     {
-        0
         {
             $ButtonType = [System.Windows.MessageBoxButton]::YesNo
             $MessageIcon = [System.Windows.MessageBoxImage]::Information
@@ -118,3 +117,31 @@ function alert()
                 }
             }
         }
+Default
+        {
+            $ButtonType = [System.Windows.MessageBoxButton]::Ok
+            $MessageIcon = [System.Windows.MessageBoxImage]::Warning
+            $MessageBody = "Error!"
+            $MessageTitle = "Reminder"
+            $result = [System.Windows.MessageBox]::Show($MessageBody,$MessageTitle,$ButtonType,$MessageIcon)
+            switch ( $result )
+            {
+                "Yes"
+                {
+                    # default browser
+                    #Start-Process "https://example.si/te"
+                    # chrome
+                    [system.Diagnostics.Process]::Start("chrome","https://example.si/te")
+                }
+
+                "No"
+                {
+                }
+
+                Default
+                {
+                }
+            }
+        }
+    }
+}
