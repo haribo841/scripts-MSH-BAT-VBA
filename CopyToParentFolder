@@ -1,0 +1,47 @@
+# Set the path to the main folder
+$mainFolder = "C:\Users\main\folder\location"
+
+# Check if the main folder exists
+if (-Not (Test-Path -Path $mainFolder)) {
+    Write-Host "Main folder does not exist: $mainFolder"
+    exit
+}
+
+# Get all subfolders
+$subfolders = Get-ChildItem -Path $mainFolder -Directory
+
+# Check if there are subfolders
+if ($subfolders.Count -eq 0) {
+    Write-Host "No subfolders in the main folder: $mainFolder"
+    exit
+}
+
+# Move all images from subfolders to the main folder
+foreach ($subfolder in $subfolders) {
+    Write-Host "Processing subfolder: $($subfolder.FullName)"
+
+    # Get all image files in the subfolder
+    $images = Get-ChildItem -Path $subfolder.FullName -File | Where-Object { $_.Extension -match "jpg|jpeg|png|gif|bmp|tiff" }
+
+    # Check if there are images to move
+    if ($images.Count -eq 0) {
+        Write-Host "No images in the subfolder: $($subfolder.FullName)"
+        continue
+    }
+
+    # Move each image to the main folder
+    foreach ($image in $images) {
+        $destinationPath = Join-Path -Path $mainFolder -ChildPath $image.Name
+
+        # Check if a file with the same name already exists in the main folder
+        if (Test-Path -Path $destinationPath) {
+            Write-Host "File already exists in the main folder: $($destinationPath). Moving with a new name."
+            # Generate a unique file name
+            $uniqueName = [System.IO.Path]::GetFileNameWithoutExtension($image.Name) + "_" + [System.Guid]::NewGuid().ToString() + $image.Extension
+            $destinationPath = Join-Path -Path $mainFolder -ChildPath $uniqueName
+        }
+
+        Move-Item -Path $image.FullName -Destination $destinationPath -Force
+        Write-Host "Moved file: $($image.FullName) -> $destinationPath"
+    }
+}
